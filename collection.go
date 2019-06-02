@@ -29,6 +29,7 @@ func (c *Collection) DocumentIterator() (*Iterator, error) {
 	}
 
 	return &Iterator{
+		Collection: c,
 		cursor: cursor,
 	}, nil
 }

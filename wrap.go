@@ -41,8 +41,8 @@ type CollectionQuery struct {
 	filter     filter.Filter
 }
 
-// Cursor to iterate over documents
+// Iterator to iterate over documents
 type Iterator struct {
-	collection *Collection
+	Collection *Collection
 	cursor     *mongo.Cursor
 }

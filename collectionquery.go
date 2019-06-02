@@ -10,6 +10,7 @@ func (c *CollectionQuery) DocumentIterator() (*Iterator, error) {
 	}
 
 	return &Iterator{
-		cursor: cursor,
+		Collection: c.collection,
+		cursor:     cursor,
 	}, nil
 }
