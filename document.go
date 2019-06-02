@@ -3,6 +3,7 @@ package wrap
 import (
 	"context"
 
+	"github.com/lucacasonato/wrap/update"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,13 +33,33 @@ func (c *Collection) Add(data interface{}) (*Document, error) {
 }
 
 // Get the contents of a document
-func (d *Document) Get(data interface{}) error {
+func (d *Document) Get() (*DocumentData, error) {
 	objID, err := primitive.ObjectIDFromHex(d.ID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	err = d.Collection.collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(data)
+	return &DocumentData{
+		Document: d,
+		result:   d.Collection.collection.FindOne(context.Background(), bson.M{"_id": objID}),
+	}, nil
+}
+
+// Data decodes some data and returns an interface
+func (d *DocumentData) Data() (interface{}, error) {
+	var data interface{}
+
+	err := d.result.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+// DataTo decodes some data into an interface
+func (d *DocumentData) DataTo(data interface{}) error {
+	err := d.result.Decode(data)
 	if err != nil {
 		return err
 	}
@@ -62,13 +83,13 @@ func (d *Document) Set(data interface{}) error {
 }
 
 // Update a document using the update operators
-func (d *Document) Update(update Update, upsert bool) error {
+func (d *Document) Update(u update.Update, upsert bool) error {
 	objID, err := primitive.ObjectIDFromHex(d.ID)
 	if err != nil {
 		return err
 	}
 
-	_, err = d.Collection.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, update, options.Update().SetUpsert(upsert))
+	_, err = d.Collection.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, u, options.Update().SetUpsert(upsert))
 	if err != nil {
 		return err
 	}

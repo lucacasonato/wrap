@@ -1,6 +1,9 @@
-package wrap
+package update
 
 import "go.mongodb.org/mongo-driver/bson"
+
+// Update fields
+type Update bson.M
 
 // CurrentDateType for the CurrentDate update operator
 type CurrentDateType string

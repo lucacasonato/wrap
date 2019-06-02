@@ -3,7 +3,7 @@ package wrap_test
 import (
 	"testing"
 
-	"github.com/lucacasonato/wrap"
+	"github.com/lucacasonato/wrap/update"
 )
 
 func TestCollectionAddUpdate(t *testing.T) {
@@ -21,7 +21,12 @@ func TestCollectionAddUpdate(t *testing.T) {
 
 	t.Log(doc)
 
-	err = doc.Update(wrap.Set("name", "The red fish."), true)
+	err = doc.Update(update.Set("name", "The red fish."), true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = collection.Database.Delete()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,10 +49,20 @@ func TestDocumentSetGet(t *testing.T) {
 
 	var fishData map[string]interface{}
 
-	err = redFish.Get(&fishData)
+	doc, err := redFish.Get()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = doc.DataTo(&fishData)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log(fishData)
+
+	err = collection.Database.Delete()
+	if err != nil {
+		t.Fatal(err)
+	}
 }
