@@ -1,7 +1,7 @@
 package wrap
 
 import (
-	"github.com/lucacasonato/wrap/filter"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -38,7 +38,7 @@ type DocumentData struct {
 // CollectionQuery is a filtered abstraction of a group of documents
 type CollectionQuery struct {
 	collection *Collection
-	filter     filter.Filter
+	pipes      []*bson.M
 }
 
 // Iterator to iterate over documents

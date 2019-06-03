@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/lucacasonato/wrap/expressions"
 	"github.com/lucacasonato/wrap/filter"
 
 	"github.com/lucacasonato/wrap/update"
@@ -15,6 +16,7 @@ import (
 type User struct {
 	Name       string
 	Email      string
+	Numbers    []int
 	LastEdited time.Time
 }
 
@@ -43,6 +45,7 @@ func main() {
 	luca, err := users.Add(&User{
 		Name:       "Luca Casonato",
 		Email:      "luca.casonato@antipy.com",
+		Numbers:    []int{5, 10, 15},
 		LastEdited: time.Now(),
 	})
 	if err != nil {
@@ -52,6 +55,7 @@ func main() {
 	_, err = users.Add(&User{
 		Name:       "Jaap Aarts",
 		Email:      "jaap.aarts@antipy.com",
+		Numbers:    []int{20, 4, 100},
 		LastEdited: time.Now(),
 	})
 	if err != nil {
@@ -65,14 +69,21 @@ func main() {
 		panic(err)
 	}
 
-	iterator, err := users.Where(filter.AND(filter.TextSearch("luca"), filter.Equal("email", "luca.casonato@antipy.com"))).DocumentIterator()
+	iterator, err := users.Where(
+		filter.AND(
+			filter.TextSearch("luca"),
+			filter.Equal("email", "luca.casonato@antipy.com"),
+		),
+	).Modify(map[string]interface{}{
+		"average_number": expressions.Avg(expressions.Value("numbers")),
+	}).DocumentIterator()
 	if err != nil {
 		panic(err)
 	}
 	defer iterator.Close()
 
 	for iterator.Next() {
-		user := User{}
+		user := map[string]interface{}{}
 		err := iterator.DataTo(&user)
 		if err != nil {
 			panic(err)

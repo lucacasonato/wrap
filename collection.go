@@ -16,25 +16,22 @@ func (d *Database) Collection(id string) *Collection {
 	return &Collection{ID: id, collection: collection, Database: d}
 }
 
-// Where returns an abstract of the collection of fields that match the filter
+// Where returns an abstract of the collection of documents that match the filter
 func (c *Collection) Where(filter filter.Filter) *CollectionQuery {
 	return &CollectionQuery{
 		collection: c,
-		filter:     filter,
+		pipes: []*bson.M{&bson.M{
+			"$match": filter,
+		}},
 	}
 }
 
-// DocumentIterator gives you an iterator to loop over the documents
-func (c *Collection) DocumentIterator() (*Iterator, error) {
-	cursor, err := c.collection.Find(context.Background(), nil)
-	if err != nil {
-		return nil, err
+// All returns an abstract of the collection of all documents
+func (c *Collection) All() *CollectionQuery {
+	return &CollectionQuery{
+		collection: c,
+		pipes:      []*bson.M{},
 	}
-
-	return &Iterator{
-		Collection: c,
-		cursor:     cursor,
-	}, nil
 }
 
 // CreateIndex for a single or group of fields

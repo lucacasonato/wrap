@@ -3,7 +3,7 @@ package update
 import "go.mongodb.org/mongo-driver/bson"
 
 // Update fields
-type Update bson.M
+type Update *bson.M
 
 // CurrentDateType for the CurrentDate update operator
 type CurrentDateType string
@@ -17,7 +17,7 @@ const (
 
 // CurrentDate sets a certain field to the current date or timestamp
 func CurrentDate(field string, typ CurrentDateType) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$currentDate": bson.M{
 			field: bson.M{
 				"$type": typ,
@@ -28,7 +28,7 @@ func CurrentDate(field string, typ CurrentDateType) Update {
 
 // Increment a field by a certain amount
 func Increment(field string, amount float64) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$inc": bson.M{
 			field: amount,
 		},
@@ -37,7 +37,7 @@ func Increment(field string, amount float64) Update {
 
 // SetIfLess operator updates only when current stored value is less than the new value
 func SetIfLess(field string, value interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$min": bson.M{
 			field: value,
 		},
@@ -46,7 +46,7 @@ func SetIfLess(field string, value interface{}) Update {
 
 // SetIfGreater operator updates only when current stored value is greater than the new value
 func SetIfGreater(field string, value interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$max": bson.M{
 			field: value,
 		},
@@ -55,7 +55,7 @@ func SetIfGreater(field string, value interface{}) Update {
 
 // Multiply a field by a certain amount
 func Multiply(field string, amount float64) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$mul": bson.M{
 			field: amount,
 		},
@@ -64,7 +64,7 @@ func Multiply(field string, amount float64) Update {
 
 // Rename a field to a new name
 func Rename(field string, newName string) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$rename": bson.M{
 			field: newName,
 		},
@@ -73,7 +73,7 @@ func Rename(field string, newName string) Update {
 
 // Set a field to a new value
 func Set(field string, value interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$set": bson.M{
 			field: value,
 		},
@@ -82,7 +82,7 @@ func Set(field string, value interface{}) Update {
 
 // SetIfNew a field to a new value if the document gets created by this update call
 func SetIfNew(field string, value interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$setOnInsert": bson.M{
 			field: value,
 		},
@@ -91,7 +91,7 @@ func SetIfNew(field string, value interface{}) Update {
 
 // Unset removes a field from the document
 func Unset(field string) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$unset": bson.M{
 			field: "",
 		},
@@ -100,7 +100,7 @@ func Unset(field string) Update {
 
 // AddToSet adds the value to the array if it isnt already in the array
 func AddToSet(field string, value interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$addToSet": bson.M{
 			field: value,
 		},
@@ -109,7 +109,7 @@ func AddToSet(field string, value interface{}) Update {
 
 // PopFirst removes the first element from the array
 func PopFirst(field string) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$pop": bson.M{
 			field: -1,
 		},
@@ -118,7 +118,7 @@ func PopFirst(field string) Update {
 
 // PopLast removes the last element from the array
 func PopLast(field string) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$pop": bson.M{
 			field: 1,
 		},
@@ -127,7 +127,7 @@ func PopLast(field string) Update {
 
 // RemoveAll element(s) from an array that are in remove array
 func RemoveAll(field string, array []interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$pullAll": bson.M{
 			field: array,
 		},
@@ -136,7 +136,7 @@ func RemoveAll(field string, array []interface{}) Update {
 
 // Push all elements onto the array
 func Push(field string, newItems []interface{}) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$push": bson.M{
 			"$each": bson.M{
 				field: newItems,
@@ -147,7 +147,7 @@ func Push(field string, newItems []interface{}) Update {
 
 // BitAND does a bitwise AND between the selected field and the integer
 func BitAND(field string, value int) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$bit": bson.M{
 			field: bson.M{
 				"and": value,
@@ -158,7 +158,7 @@ func BitAND(field string, value int) Update {
 
 // BitOR does a bitwise or between the selected field and the integer
 func BitOR(field string, value int) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$bit": bson.M{
 			field: bson.M{
 				"or": value,
@@ -169,7 +169,7 @@ func BitOR(field string, value int) Update {
 
 // BitXOR does a bitwise XOR between the selected field and the integer
 func BitXOR(field string, value int) Update {
-	return Update(bson.M{
+	return Update(&bson.M{
 		"$bit": bson.M{
 			field: bson.M{
 				"xor": value,
