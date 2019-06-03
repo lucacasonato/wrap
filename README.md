@@ -111,7 +111,7 @@ import "github.com/lucacasonato/wrap"
 	}
 ```
 
-#### get structurally modified data
+#### get structurally modified data (aggregation)
 
 ```go
 	iterator, err = users.All().
