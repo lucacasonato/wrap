@@ -19,16 +19,16 @@ import "github.com/lucacasonato/wrap"
 #### connect
 
 ```go
-	client, err := wrap.Connect("mongodb://localhost:27017", 5*time.Second)
-	if err != nil {
-		panic(err)
-	}
+client, err := wrap.Connect("mongodb://localhost:27017", 5*time.Second)
+if err != nil {
+  panic(err)
+}
 ```
 
 #### open a database
 
 ```go
-	db := client.Database("production")
+db := client.Database("production")
 ```
 
 > note: you are only getting a refrence to the database here. you are not actually creating it yet
@@ -36,7 +36,7 @@ import "github.com/lucacasonato/wrap"
 #### get a collection
 
 ```go
-	users := db.Collection("users")
+users := db.Collection("users")
 ```
 
 > note: you are only getting a refrence to the collection here. you are not actually creating it yet
@@ -44,99 +44,109 @@ import "github.com/lucacasonato/wrap"
 #### add data
 
 ```go
-	doc, err := users.Add(&User{
-		Name:            "Luca Casonato",
-    Email:           "luca.casonato@antipy.com",
-    FavoriteNumbers: []int{5, 10, 15},
-		LastEdited:      time.Now(),
-	})
-	if err != nil {
-		panic(err)
-	}
+doc, err := users.Add(&User{
+  Name:            "Luca Casonato",
+  Email:           "luca.casonato@antipy.com",
+  FavoriteNumbers: []int{5, 10, 15},
+  LastEdited:      time.Now(),
+})
+if err != nil {
+  panic(err)
+}
 ```
 
 #### get data
 
 ```go
-	data, err := doc.Get()
-	if err != nil {
-		panic(err)
-  }
+data, err := doc.Get()
+if err != nil {
+  panic(err)
+}
 
-  user := User{}
+user := User{}
 
-  data.DataTo(&user)
+data.DataTo(&user)
 
-  fmt.Println(user.Name)
+fmt.Println(user.Name)
 ```
 
 #### update data
 
 ```go
-	err = doc.Update(update.Set("email", "luca@antipy.com"), true)
-	if err != nil {
-		panic(err)
-	}
+err = doc.Update(update.Set("email", "luca@antipy.com"), true)
+if err != nil {
+  panic(err)
+}
 ```
 
 #### create index
 
 ```go
-	err = users.CreateIndex(map[string]wrap.Index{
-		"name":  wrap.TextIndex,
-		"email": wrap.AscendingIndex,
-	})
-	if err != nil {
-		panic(err)
-	}
+err = users.CreateIndex(map[string]wrap.Index{
+  "name":  wrap.TextIndex,
+  "email": wrap.AscendingIndex,
+})
+if err != nil {
+  panic(err)
+}
 ```
 
 #### get filtered data
 
 ```go
-	iterator, err := users.Where(filter.AND(filter.TextSearch("luca"), filter.Equal("email", "luca.casonato@antipy.com"))).DocumentIterator()
-	if err != nil {
-		panic(err)
-	}
-	defer iterator.Close()
+iterator, err := users.
+  Where(filter.AND(
+    filter.TextSearch("luca"),
+    filter.Equal("email", "luca.casonato@antipy.com"),
+  )).
+  DocumentIterator()
+if err != nil {
+  panic(err)
+}
+defer iterator.Close()
 
-	for iterator.Next() {
-		user := User{}
-		err := iterator.DataTo(&user)
-		if err != nil {
-			panic(err)
-		}
+for iterator.Next() {
+  user := User{}
+  err := iterator.DataTo(&user)
+  if err != nil {
+    panic(err)
+  }
 
-		fmt.Println(user)
-	}
+  fmt.Println(user)
+}
 ```
 
 #### get structurally modified data (aggregation)
 
 ```go
-	iterator, err = users.All().
-		Modify(map[string]interface{}{
-			"email": expressions.Exclude,
-		}).
-		AddFields(map[string]interface{}{
-			"averagefavoritenumber": expressions.MathAvg(expressions.Value("favoritenumbers")),
-		}).
-		DocumentIterator()
+iterator, err = users.All().
+  Modify(map[string]interface{}{
+    "email": expressions.Exclude,
+  }).
+  AddFields(map[string]interface{}{
+    "averagefavoritenumber": expressions.MathAvg(expressions.Value("favoritenumbers")),
+  }).
+  DocumentIterator()
+
+if err != nil {
+  panic(err)
+}
+defer iterator.Close()
+
+for iterator.Next() {
+  user := map[string]interface{}{}
+  err := iterator.DataTo(&user)
   if err != nil {
-		panic(err)
-	}
-	defer iterator.Close()
+    panic(err)
+  }
 
-	for iterator.Next() {
-		user := map[string]interface{}{}
-		err := iterator.DataTo(&user)
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(user)
-	}
+  fmt.Println(user)
+}
 ```
+
+#### example
+
+A full example can be found in the "example" folder.
 
 ## planning
 
