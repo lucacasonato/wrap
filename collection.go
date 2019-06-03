@@ -3,6 +3,9 @@ package wrap
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+
 	"github.com/lucacasonato/wrap/filter"
 )
 
@@ -30,8 +33,26 @@ func (c *Collection) DocumentIterator() (*Iterator, error) {
 
 	return &Iterator{
 		Collection: c,
-		cursor: cursor,
+		cursor:     cursor,
 	}, nil
+}
+
+// CreateIndex for a single or group of fields
+func (c *Collection) CreateIndex(fields map[string]Index) error {
+	i := bson.M{}
+
+	for field, index := range fields {
+		i[field] = index
+	}
+
+	_, err := c.collection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys: i,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Delete a collection

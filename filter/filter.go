@@ -141,10 +141,10 @@ func Regex(field string, regex string) Filter {
 }
 
 // TextSearch matches if the field contains the specified text
-func TextSearch(field string, text string) Filter {
+func TextSearch(text string) Filter {
 	return Filter(bson.M{
-		field: bson.M{
-			"$text": text,
+		"$text": bson.M{
+			"$search": text,
 		},
 	})
 }
@@ -162,11 +162,9 @@ func Modulo(field string, divisor int, remainder int) Filter {
 }
 
 // JavascriptExpression matches if the field contains the specified text
-func JavascriptExpression(field string, expression string) Filter {
+func JavascriptExpression(expression string) Filter {
 	return Filter(bson.M{
-		field: bson.M{
-			"$where": primitive.JavaScript(expression),
-		},
+		"$where": primitive.JavaScript(expression),
 	})
 }
 
