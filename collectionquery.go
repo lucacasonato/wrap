@@ -79,6 +79,17 @@ func (cq *CollectionQuery) Modify(spec map[string]interface{}) *CollectionQuery 
 	return &c
 }
 
+// AddFields adds some fields to the returned documents
+func (cq *CollectionQuery) AddFields(spec map[string]interface{}) *CollectionQuery {
+	c := *cq
+
+	c.pipes = append(c.pipes, &bson.M{
+		"$addFields": spec,
+	})
+
+	return &c
+}
+
 // DocumentIterator gives you an iterator to loop over the documents
 func (cq *CollectionQuery) DocumentIterator() (*Iterator, error) {
 	cursor, err := cq.collection.collection.Aggregate(context.Background(), cq.pipes)

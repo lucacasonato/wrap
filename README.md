@@ -45,9 +45,10 @@ import "github.com/lucacasonato/wrap"
 
 ```go
 	doc, err := users.Add(&User{
-		Name:       "Luca Casonato",
-		Email:      "luca.casonato@antipy.com",
-		LastEdited: time.Now(),
+		Name:            "Luca Casonato",
+    Email:           "luca.casonato@antipy.com",
+    FavoriteNumbers: []int{5, 10, 15},
+		LastEdited:      time.Now(),
 	})
 	if err != nil {
 		panic(err)
@@ -110,9 +111,35 @@ import "github.com/lucacasonato/wrap"
 	}
 ```
 
+#### get structurally modified data
+
+```go
+	iterator, err = users.All().
+		Modify(map[string]interface{}{
+			"email": expressions.Exclude,
+		}).
+		AddFields(map[string]interface{}{
+			"averagefavoritenumber": expressions.MathAvg(expressions.Value("favoritenumbers")),
+		}).
+		DocumentIterator()
+  if err != nil {
+		panic(err)
+	}
+	defer iterator.Close()
+
+	for iterator.Next() {
+		user := map[string]interface{}{}
+		err := iterator.DataTo(&user)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(user)
+	}
+```
+
 ## planning
 
-- aggregation
 - transactions and sessions
 - enable automatic index creation
 - implement schema filters (im lazy)
