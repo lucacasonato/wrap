@@ -2,7 +2,7 @@
 
 [![](https://godoc.org/github.com/nathany/looper?status.svg)](https://godoc.org/github.com/lucacasonato/wrap)
 
-wrap is an abstraction layer above mongodb 🍃 to make it feel a little like firestore 🔥
+wrap is an abstraction layer on top of mongodb 🍃 to make it feel a little like firestore 🔥
 
 Wrap enables the full filtering system that MongoDB has without ever having to touch BSON. Everything is structured in a way that BSON and MongoDB stay completly hidden.
 
