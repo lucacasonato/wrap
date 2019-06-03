@@ -6,6 +6,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.3.0 // indirect
+	github.com/imdario/mergo v0.3.7
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/montanaflynn/stats v0.5.0 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect

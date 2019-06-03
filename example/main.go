@@ -67,12 +67,12 @@ func main() {
 	err = users.Transaction(func(users *wrap.Collection) error {
 		now := time.Now()
 
-		err := users.Document(luca.ID).Update(update.Set("lastedited", now), true)
+		err := users.Document(luca.ID).Update(true, update.Set("lastedited", now), update.Set("email", "luca@antipy.com"))
 		if err != nil {
 			return err
 		}
 
-		err = users.Document(jaap.ID).Update(update.Set("lastedited", now), true)
+		err = users.Document(jaap.ID).Update(true, update.Set("lastedited", now))
 		if err != nil {
 			return err
 		}
@@ -89,10 +89,7 @@ func main() {
 
 	iterator, err := users.
 		Where(
-			filter.AND(
-				filter.TextSearch("luca"),
-				filter.Equal("email", "luca.casonato@antipy.com"),
-			),
+			filter.TextSearch("luca"),
 		).
 		DocumentIterator()
 	if err != nil {
@@ -107,7 +104,7 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(user["email"])
+		fmt.Println(user)
 	}
 
 	iterator, err = users.All().
@@ -131,6 +128,6 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(user["averagefavoritenumber"])
+		fmt.Println(user)
 	}
 }

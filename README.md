@@ -150,12 +150,12 @@ for iterator.Next() {
 err := users.Transaction(func(users *wrap.Collection) error {
   now := time.Now()
 
-  err := users.Document(luca.ID).Update(update.Set("lastedited", now), true)
+  err := users.Document(luca.ID).Update(true, update.Set("lastedited", now))
   if err != nil {
     return err
   }
 
-  err = users.Document(jaap.ID).Update(update.Set("lastedited", now), true)
+  err = users.Document(jaap.ID).Update(true, update.Set("lastedited", now))
   if err != nil {
     return err
   }
@@ -173,8 +173,11 @@ A full example can be found in the "example" folder.
 
 ## planning
 
-- enable automatic index creation
+- bulk atomic write
+- update all
+- delete all
 - implement schema filters (im lazy)
+- automatic index creation
 - more tests
 
 ## contributing

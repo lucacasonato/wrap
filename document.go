@@ -1,6 +1,7 @@
 package wrap
 
 import (
+	"github.com/imdario/mergo"
 	"github.com/lucacasonato/wrap/update"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -81,13 +82,22 @@ func (d *Document) Set(data interface{}) error {
 }
 
 // Update a document using the update operators
-func (d *Document) Update(u update.Update, upsert bool) error {
+func (d *Document) Update(upsert bool, updates ...update.Update) error {
 	objID, err := primitive.ObjectIDFromHex(d.ID)
 	if err != nil {
 		return err
 	}
 
-	_, err = d.Collection.collection.UpdateOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, u, options.Update().SetUpsert(upsert))
+	var final = bson.M{}
+
+	for _, update := range updates {
+		err := mergo.Merge(&final, update)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = d.Collection.collection.UpdateOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, final, options.Update().SetUpsert(upsert))
 	if err != nil {
 		return err
 	}

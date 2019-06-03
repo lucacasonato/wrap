@@ -21,7 +21,7 @@ func TestCollectionAddUpdate(t *testing.T) {
 
 	t.Log(doc)
 
-	err = doc.Update(update.Set("name", "The red fish."), true)
+	err = doc.Update(true, update.Set("name", "The red fish."))
 	if err != nil {
 		t.Fatal(err)
 	}
