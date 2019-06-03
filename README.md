@@ -174,8 +174,6 @@ A full example can be found in the "example" folder.
 ## planning
 
 - bulk atomic write
-- update all
-- delete all
 - implement schema filters (im lazy)
 - automatic index creation
 - more tests

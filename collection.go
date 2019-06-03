@@ -3,8 +3,11 @@ package wrap
 import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/imdario/mergo"
 	"github.com/lucacasonato/wrap/filter"
+	"github.com/lucacasonato/wrap/update"
 )
 
 // Collection in the database by id
@@ -53,4 +56,33 @@ func (c *Collection) CreateIndex(fields map[string]Index) error {
 // Delete a collection
 func (c *Collection) Delete() error {
 	return c.collection.Drop(c.Database.Client.context)
+}
+
+// UpdateDocumentsWhere the filter matches
+func (c *Collection) UpdateDocumentsWhere(filter filter.Filter, upsert bool, updates ...update.Update) error {
+	var final = bson.M{}
+
+	for _, u := range updates {
+		err := mergo.Merge(&final, u)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err := c.collection.UpdateMany(c.Database.Client.context, filter, final, options.Update().SetUpsert(upsert))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeleteDocumentsWhere the filter matches
+func (c *Collection) DeleteDocumentsWhere(filter filter.Filter) error {
+	_, err := c.collection.DeleteMany(c.Database.Client.context, filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
