@@ -69,7 +69,7 @@ import "github.com/lucacasonato/wrap"
   fmt.Println(user.Name)
 ```
 
-### update data
+#### update data
 
 ```go
 	err = doc.Update(update.Set("email", "luca@antipy.com"), true)
