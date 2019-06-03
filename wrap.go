@@ -1,19 +1,23 @@
 package wrap
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Client wraps the mongo client
 type Client struct {
-	client *mongo.Client
+	client  *mongo.Client
+	context context.Context
 }
 
 // Database is a database instance
 type Database struct {
 	ID       string
 	database *mongo.Database
+	Client   *Client
 }
 
 // Collection is a collection on the database
@@ -37,7 +41,7 @@ type DocumentData struct {
 
 // CollectionQuery is a filtered abstraction of a group of documents
 type CollectionQuery struct {
-	collection *Collection
+	Collection *Collection
 	pipes      []*bson.M
 }
 

@@ -21,7 +21,7 @@ type User struct {
 }
 
 func main() {
-	client, err := wrap.Connect("mongodb://localhost:27017", 5*time.Second)
+	client, err := wrap.Connect("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs", 5*time.Second)
 	if err != nil {
 		panic(err)
 	}
@@ -52,7 +52,7 @@ func main() {
 		panic(err)
 	}
 
-	_, err = users.Add(&User{
+	jaap, err := users.Add(&User{
 		Name:            "Jaap Aarts",
 		Email:           "jaap.aarts@antipy.com",
 		FavoriteNumbers: []int{20, 4, 100},
@@ -64,7 +64,25 @@ func main() {
 
 	<-time.NewTimer(10 * time.Millisecond).C
 
-	err = luca.Update(update.CurrentDate("lastedited", update.Date), true)
+	err = users.Transaction(func(users *wrap.Collection) error {
+		now := time.Now()
+
+		err := users.Document(luca.ID).Update(update.Set("lastedited", now), true)
+		if err != nil {
+			return err
+		}
+
+		err = users.Document(jaap.ID).Update(update.Set("lastedited", now), true)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		err = nil
+	}
+
 	if err != nil {
 		panic(err)
 	}
@@ -89,7 +107,7 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(user)
+		fmt.Println(user["email"])
 	}
 
 	iterator, err = users.All().
@@ -113,6 +131,6 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(user)
+		fmt.Println(user["averagefavoritenumber"])
 	}
 }

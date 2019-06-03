@@ -1,10 +1,8 @@
 package wrap
 
-import "context"
-
 // Next means go to the next document in the iterator
 func (i *Iterator) Next() bool {
-	return i.cursor.Next(context.Background())
+	return i.cursor.Next(i.Collection.Database.Client.context)
 }
 
 // Data decodes some data and returns an interface
@@ -30,7 +28,7 @@ func (i *Iterator) DataTo(data interface{}) error {
 
 // Close stops the iterator
 func (i *Iterator) Close() error {
-	err := i.cursor.Close(context.Background())
+	err := i.cursor.Close(i.Collection.Database.Client.context)
 	if err != nil {
 		return err
 	}

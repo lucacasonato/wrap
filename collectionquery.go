@@ -1,8 +1,6 @@
 package wrap
 
 import (
-	"context"
-
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -92,13 +90,13 @@ func (cq *CollectionQuery) AddFields(spec map[string]interface{}) *CollectionQue
 
 // DocumentIterator gives you an iterator to loop over the documents
 func (cq *CollectionQuery) DocumentIterator() (*Iterator, error) {
-	cursor, err := cq.collection.collection.Aggregate(context.Background(), cq.pipes)
+	cursor, err := cq.Collection.collection.Aggregate(cq.Collection.Database.Client.context, cq.pipes)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Iterator{
-		Collection: cq.collection,
+		Collection: cq.Collection,
 		cursor:     cursor,
 	}, nil
 }

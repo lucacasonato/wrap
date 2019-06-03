@@ -1,8 +1,6 @@
 package wrap
 
 import (
-	"context"
-
 	"github.com/lucacasonato/wrap/update"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -24,7 +22,7 @@ func (c *Collection) Document(id string) *Document {
 
 // Add a document with a certain value
 func (c *Collection) Add(data interface{}) (*Document, error) {
-	res, err := c.collection.InsertOne(context.Background(), data)
+	res, err := c.collection.InsertOne(c.Database.Client.context, data)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +39,7 @@ func (d *Document) Get() (*DocumentData, error) {
 
 	return &DocumentData{
 		Document: d,
-		result:   d.Collection.collection.FindOne(context.Background(), bson.M{"_id": objID}),
+		result:   d.Collection.collection.FindOne(d.Collection.Database.Client.context, bson.M{"_id": objID}),
 	}, nil
 }
 
@@ -74,7 +72,7 @@ func (d *Document) Set(data interface{}) error {
 		return err
 	}
 
-	_, err = d.Collection.collection.ReplaceOne(context.Background(), bson.M{"_id": objID}, data, options.Replace().SetUpsert(true))
+	_, err = d.Collection.collection.ReplaceOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, data, options.Replace().SetUpsert(true))
 	if err != nil {
 		return err
 	}
@@ -89,7 +87,7 @@ func (d *Document) Update(u update.Update, upsert bool) error {
 		return err
 	}
 
-	_, err = d.Collection.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, u, options.Update().SetUpsert(upsert))
+	_, err = d.Collection.collection.UpdateOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, u, options.Update().SetUpsert(upsert))
 	if err != nil {
 		return err
 	}
@@ -104,7 +102,7 @@ func (d *Document) Delete() error {
 		return err
 	}
 
-	_, err = d.Collection.collection.DeleteOne(context.Background(), bson.M{"_id": objID})
+	_, err = d.Collection.collection.DeleteOne(d.Collection.Database.Client.context, bson.M{"_id": objID})
 	if err != nil {
 		return err
 	}

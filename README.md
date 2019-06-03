@@ -144,13 +144,35 @@ for iterator.Next() {
 }
 ```
 
+#### transactions
+
+```go
+err := users.Transaction(func(users *wrap.Collection) error {
+  now := time.Now()
+
+  err := users.Document(luca.ID).Update(update.Set("lastedited", now), true)
+  if err != nil {
+    return err
+  }
+
+  err = users.Document(jaap.ID).Update(update.Set("lastedited", now), true)
+  if err != nil {
+    return err
+  }
+
+  return nil
+})
+if err != nil {
+  err = nil
+}
+```
+
 #### example
 
 A full example can be found in the "example" folder.
 
 ## planning
 
-- transactions and sessions
 - enable automatic index creation
 - implement schema filters (im lazy)
 - more tests
