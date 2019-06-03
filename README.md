@@ -8,7 +8,9 @@ Wrap enables the full MongoDB feature set without ever having to touch BSON or o
 
 ## install
 
-`go get github.com/lucacasonato/wrap`
+```bash
+go get github.com/lucacasonato/wrap
+```
 
 ```go
 import "github.com/lucacasonato/wrap"
