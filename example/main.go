@@ -42,22 +42,22 @@ func main() {
 		panic(err)
 	}
 
-	luca, err := users.Add(&User{
-		Name:            "Luca Casonato",
-		Email:           "luca.casonato@antipy.com",
-		FavoriteNumbers: []int{5, 10, 15},
-		LastEdited:      time.Now(),
-	})
-	if err != nil {
-		panic(err)
-	}
+	err = users.Bulk(func(users *wrap.BulkCollection) error {
+		users.Add(&User{
+			Name:            "Luca Casonato",
+			Email:           "luca.casonato@antipy.com",
+			FavoriteNumbers: []int{5, 10, 15},
+			LastEdited:      time.Now(),
+		})
+		users.Add(&User{
+			Name:            "Jaap Aarts",
+			Email:           "jaap.aarts@antipy.com",
+			FavoriteNumbers: []int{20, 4, 100},
+			LastEdited:      time.Now(),
+		})
 
-	jaap, err := users.Add(&User{
-		Name:            "Jaap Aarts",
-		Email:           "jaap.aarts@antipy.com",
-		FavoriteNumbers: []int{20, 4, 100},
-		LastEdited:      time.Now(),
-	})
+		return nil
+	}, false)
 	if err != nil {
 		panic(err)
 	}
@@ -67,12 +67,12 @@ func main() {
 	err = users.Transaction(func(users *wrap.Collection) error {
 		now := time.Now()
 
-		err := users.Document(luca.ID).Update(true, update.Set("lastedited", now), update.Set("email", "luca@antipy.com"))
+		err = users.UpdateDocumentsWhere(filter.Equal("email", "luca.casonato@antipy.com"), true, update.Set("lastedited", now), update.Set("email", "luca@antipy.com"))
 		if err != nil {
 			return err
 		}
 
-		err = users.Document(jaap.ID).Update(true, update.Set("lastedited", now))
+		err = users.UpdateDocumentsWhere(filter.Equal("email", "jaap.aarts@antipy.com"), true, update.Set("lastedited", now))
 		if err != nil {
 			return err
 		}
@@ -80,7 +80,7 @@ func main() {
 		return nil
 	})
 	if err != nil {
-		err = nil
+		panic(err)
 	}
 
 	if err != nil {

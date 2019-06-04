@@ -50,3 +50,16 @@ type Iterator struct {
 	Collection *Collection
 	cursor     *mongo.Cursor
 }
+
+// BulkCollection is a collection which is used for bulk writing
+type BulkCollection struct {
+	ID         string
+	Collection *Collection
+	models     []mongo.WriteModel
+}
+
+// BulkDocument is a document which is used for bulk writing
+type BulkDocument struct {
+	ID         string
+	Collection *BulkCollection
+}
