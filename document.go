@@ -38,9 +38,15 @@ func (d *Document) Get() (*DocumentData, error) {
 		return nil, err
 	}
 
+	result := d.Collection.collection.FindOne(d.Collection.Database.Client.context, bson.M{"_id": objID})
+	err = result.Err()
+	if err != nil {
+		return nil, err
+	}
+
 	return &DocumentData{
 		Document: d,
-		result:   d.Collection.collection.FindOne(d.Collection.Database.Client.context, bson.M{"_id": objID}),
+		result:   result,
 	}, nil
 }
 
