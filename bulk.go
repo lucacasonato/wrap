@@ -22,7 +22,7 @@ func (c *Collection) Bulk(run func(collection *BulkCollection) error, ordered bo
 		return err
 	}
 
-	_, err = c.collection.BulkWrite(bulkCollection.Collection.Database.Client.context, bulkCollection.models, options.BulkWrite().SetOrdered(ordered))
+	_, err = c.collection.BulkWrite(bulkCollection.Collection.Database.Client.ctx(), bulkCollection.models, options.BulkWrite().SetOrdered(ordered))
 	if err != nil {
 		return err
 	}

@@ -24,6 +24,7 @@ func Connect(mongoURI string, timeout time.Duration) (*Client, error) {
 
 	return &Client{
 		client:  client,
-		context: ctx,
+		context: context.Background(),
+		timeout: timeout,
 	}, nil
 }

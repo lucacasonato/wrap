@@ -9,5 +9,5 @@ func (c *Client) Database(id string) *Database {
 
 // Delete a database
 func (d *Database) Delete() error {
-	return d.database.Drop(d.Client.context)
+	return d.database.Drop(d.Client.ctx())
 }

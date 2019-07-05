@@ -21,6 +21,7 @@ func (c *Client) Transaction(run func(client *Client) error) error {
 		client := &Client{
 			client:  c.client,
 			context: sc,
+			timeout: c.timeout,
 		}
 
 		err = run(client)

@@ -90,7 +90,7 @@ func (cq *CollectionQuery) AddFields(spec map[string]interface{}) *CollectionQue
 
 // DocumentIterator gives you an iterator to loop over the documents
 func (cq *CollectionQuery) DocumentIterator() (*Iterator, error) {
-	cursor, err := cq.Collection.collection.Aggregate(cq.Collection.Database.Client.context, cq.pipes)
+	cursor, err := cq.Collection.collection.Aggregate(cq.Collection.Database.Client.ctx(), cq.pipes)
 	if err != nil {
 		return nil, err
 	}

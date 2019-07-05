@@ -23,7 +23,7 @@ func (c *Collection) Document(id string) *Document {
 
 // Add a document with a certain value
 func (c *Collection) Add(data interface{}) (*Document, error) {
-	res, err := c.collection.InsertOne(c.Database.Client.context, data)
+	res, err := c.collection.InsertOne(c.Database.Client.ctx(), data)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (d *Document) Get() (*DocumentData, error) {
 		return nil, err
 	}
 
-	result := d.Collection.collection.FindOne(d.Collection.Database.Client.context, bson.M{"_id": objID})
+	result := d.Collection.collection.FindOne(d.Collection.Database.Client.ctx(), bson.M{"_id": objID})
 	err = result.Err()
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (d *Document) Set(data interface{}) error {
 		return err
 	}
 
-	_, err = d.Collection.collection.ReplaceOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, data, options.Replace().SetUpsert(true))
+	_, err = d.Collection.collection.ReplaceOne(d.Collection.Database.Client.ctx(), bson.M{"_id": objID}, data, options.Replace().SetUpsert(true))
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func (d *Document) Update(upsert bool, updates ...update.Update) error {
 		}
 	}
 
-	_, err = d.Collection.collection.UpdateOne(d.Collection.Database.Client.context, bson.M{"_id": objID}, final, options.Update().SetUpsert(upsert))
+	_, err = d.Collection.collection.UpdateOne(d.Collection.Database.Client.ctx(), bson.M{"_id": objID}, final, options.Update().SetUpsert(upsert))
 	if err != nil {
 		return err
 	}
@@ -118,7 +118,7 @@ func (d *Document) Delete() error {
 		return err
 	}
 
-	_, err = d.Collection.collection.DeleteOne(d.Collection.Database.Client.context, bson.M{"_id": objID})
+	_, err = d.Collection.collection.DeleteOne(d.Collection.Database.Client.ctx(), bson.M{"_id": objID})
 	if err != nil {
 		return err
 	}

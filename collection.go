@@ -43,7 +43,7 @@ func (c *Collection) CreateIndex(fields map[string]Index) error {
 		i[field] = index
 	}
 
-	_, err := c.collection.Indexes().CreateOne(c.Database.Client.context, mongo.IndexModel{
+	_, err := c.collection.Indexes().CreateOne(c.Database.Client.ctx(), mongo.IndexModel{
 		Keys: i,
 	})
 	if err != nil {
@@ -55,7 +55,7 @@ func (c *Collection) CreateIndex(fields map[string]Index) error {
 
 // Delete a collection
 func (c *Collection) Delete() error {
-	return c.collection.Drop(c.Database.Client.context)
+	return c.collection.Drop(c.Database.Client.ctx())
 }
 
 // UpdateDocumentsWhere the filter matches
@@ -69,7 +69,7 @@ func (c *Collection) UpdateDocumentsWhere(filter filter.Filter, upsert bool, upd
 		}
 	}
 
-	_, err := c.collection.UpdateMany(c.Database.Client.context, filter, final, options.Update().SetUpsert(upsert))
+	_, err := c.collection.UpdateMany(c.Database.Client.ctx(), filter, final, options.Update().SetUpsert(upsert))
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func (c *Collection) UpdateDocumentsWhere(filter filter.Filter, upsert bool, upd
 
 // DeleteDocumentsWhere the filter matches
 func (c *Collection) DeleteDocumentsWhere(filter filter.Filter) error {
-	_, err := c.collection.DeleteMany(c.Database.Client.context, filter)
+	_, err := c.collection.DeleteMany(c.Database.Client.ctx(), filter)
 	if err != nil {
 		return err
 	}

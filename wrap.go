@@ -2,6 +2,7 @@ package wrap
 
 import (
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,6 +12,12 @@ import (
 type Client struct {
 	client  *mongo.Client
 	context context.Context
+	timeout time.Duration
+}
+
+func (c *Client) ctx() context.Context {
+	ctx, _ := context.WithTimeout(c.context, c.timeout)
+	return ctx
 }
 
 // Database is a database instance
