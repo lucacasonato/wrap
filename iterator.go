@@ -26,6 +26,16 @@ func (i *Iterator) DataTo(data interface{}) error {
 	return nil
 }
 
+// ID gets the ID of the current iterator item
+func (i *Iterator) ID() string {
+	objectID, err := i.cursor.Current.LookupErr("_id")
+	if err != nil {
+		return ""
+	}
+
+	return objectID.ObjectID().Hex()
+}
+
 // Close stops the iterator
 func (i *Iterator) Close() error {
 	err := i.cursor.Close(i.Collection.Database.Client.ctx())
