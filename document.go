@@ -54,7 +54,7 @@ func (d *Document) Get() (*DocumentData, error) {
 func (d *DocumentData) Data() (interface{}, error) {
 	var data interface{}
 
-	err := d.result.Decode(data)
+	err := d.result.Decode(&data)
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,7 @@ func (i *Iterator) Next() bool {
 // Data decodes some data and returns an interface
 func (i *Iterator) Data() (interface{}, error) {
 	var data interface{}
-	err := i.cursor.Decode(data)
+	err := i.cursor.Decode(&data)
 	if err != nil {
 		return nil, err
 	}
