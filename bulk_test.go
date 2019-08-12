@@ -12,7 +12,7 @@ func TestBulkWrite(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = collection.Bulk(func (c *wrap.BulkCollection) error {
+	err = collection.Bulk(func(c *wrap.BulkCollection) error {
 		c.Add(map[string]interface{}{
 			"name": "the red fish",
 		})
