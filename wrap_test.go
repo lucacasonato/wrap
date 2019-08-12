@@ -1,6 +1,7 @@
-package main
+package wrap_test
 
 import (
+	"testing"
 	"fmt"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/lucacasonato/wrap/filter"
 	"github.com/lucacasonato/wrap/update"
 )
+
 
 // User record
 type User struct {
@@ -19,10 +21,10 @@ type User struct {
 	LastEdited             time.Time `bson:"lastEdited"`
 }
 
-func main() {
+func TestWrap(t *testing.T) {
 	client, err := wrap.Connect("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs", 5*time.Second)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	db := client.Database("production")
@@ -30,7 +32,7 @@ func main() {
 
 	err = users.Delete()
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	err = users.CreateIndex(map[string]wrap.Index{
@@ -38,7 +40,7 @@ func main() {
 		"email": wrap.AscendingIndex,
 	})
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	err = users.Bulk(func(users *wrap.BulkCollection) error {
@@ -58,7 +60,7 @@ func main() {
 		return nil
 	}, false)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	<-time.NewTimer(10 * time.Millisecond).C
@@ -79,11 +81,11 @@ func main() {
 		return nil
 	})
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	iterator, err := users.
@@ -92,7 +94,7 @@ func main() {
 		).
 		DocumentIterator()
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	defer iterator.Close()
 
@@ -100,7 +102,7 @@ func main() {
 		user := User{}
 		err := iterator.DataTo(&user)
 		if err != nil {
-			panic(err)
+			t.Fatal(err)
 		}
 
 		fmt.Println(user)
@@ -116,7 +118,7 @@ func main() {
 		DocumentIterator()
 
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	defer iterator.Close()
 
@@ -124,7 +126,7 @@ func main() {
 		user := User{}
 		err := iterator.DataTo(&user)
 		if err != nil {
-			panic(err)
+			t.Fatal(err)
 		}
 
 		fmt.Println(user)

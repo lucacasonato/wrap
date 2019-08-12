@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Bulk is used to do bulk wrutes
+// Bulk is used to do bulk writes
 func (c *Collection) Bulk(run func(collection *BulkCollection) error, ordered bool) error {
 	bulkCollection := &BulkCollection{
 		Collection: c,

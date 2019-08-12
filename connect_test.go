@@ -19,3 +19,12 @@ func TestConnect(t *testing.T) {
 
 	t.Log(client)
 }
+
+func TestConnectFail(t *testing.T) {
+	client, err := wrap.Connect("mongodb://brokenhost:0", 2*time.Second)
+	if err == nil {
+		t.Fatal("connect did not error on an invalid connection")
+	}
+
+	t.Log(client)
+}
