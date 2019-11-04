@@ -4,6 +4,22 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// Sorter is for sorting
+type Sorter struct {
+	field string
+	order interface{}
+}
+
+// Ascending means sorted from small to big
+func Ascending(field string) *Sorter {
+	return &Sorter{field, 1}
+}
+
+// Descending means sorted from big to small
+func Descending(field string) *Sorter {
+	return &Sorter{field, -1}
+}
+
 // Skip skips the first n documents
 func (cq *CollectionQuery) Skip(n int) *CollectionQuery {
 	c := *cq
@@ -43,6 +59,23 @@ func (cq *CollectionQuery) Sample(n int) *CollectionQuery {
 
 	c.pipes = append(c.pipes, &bson.M{
 		"$sample": n,
+	})
+
+	return &c
+}
+
+// Sort sorts a collection by a certain order
+func (cq *CollectionQuery) Sort(sorters ...*Sorter) *CollectionQuery {
+	c := *cq
+
+	finalSorters := bson.M{}
+
+	for _, s := range sorters {
+		finalSorters[s.field] = s.order
+	}
+
+	c.pipes = append(c.pipes, &bson.M{
+		"$sort": finalSorters,
 	})
 
 	return &c

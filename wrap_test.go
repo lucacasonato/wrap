@@ -2,7 +2,6 @@ package wrap_test
 
 import (
 	"testing"
-	"fmt"
 	"time"
 
 	"github.com/lucacasonato/wrap"
@@ -10,7 +9,6 @@ import (
 	"github.com/lucacasonato/wrap/filter"
 	"github.com/lucacasonato/wrap/update"
 )
-
 
 // User record
 type User struct {
@@ -36,8 +34,7 @@ func TestWrap(t *testing.T) {
 	}
 
 	err = users.CreateIndex(map[string]wrap.Index{
-		"name":  wrap.TextIndex,
-		"email": wrap.AscendingIndex,
+		"name": wrap.TextIndex,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -84,10 +81,6 @@ func TestWrap(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	iterator, err := users.
 		Where(
 			filter.TextSearch("luca"),
@@ -104,8 +97,6 @@ func TestWrap(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-
-		fmt.Println(user)
 	}
 
 	iterator, err = users.All().
@@ -128,7 +119,5 @@ func TestWrap(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-
-		fmt.Println(user)
 	}
 }

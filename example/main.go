@@ -34,8 +34,7 @@ func main() {
 	}
 
 	err = users.CreateIndex(map[string]wrap.Index{
-		"name":  wrap.TextIndex,
-		"email": wrap.AscendingIndex,
+		"name": wrap.TextIndex,
 	})
 	if err != nil {
 		panic(err)
@@ -113,6 +112,7 @@ func main() {
 		AddFields(map[string]interface{}{
 			"averageFavoriteNumber": expressions.MathAvg(expressions.Value("favoriteNumbers")),
 		}).
+		Sort(wrap.Ascending("name")).
 		DocumentIterator()
 
 	if err != nil {
