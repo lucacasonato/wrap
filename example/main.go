@@ -35,7 +35,6 @@ func main() {
 
 	err = users.CreateIndex(map[string]wrap.Index{
 		"name":  wrap.TextIndex,
-		"email": wrap.AscendingIndex,
 	})
 	if err != nil {
 		panic(err)
