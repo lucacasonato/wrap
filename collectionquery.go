@@ -65,7 +65,7 @@ func (cq *CollectionQuery) Sample(n int) *CollectionQuery {
 }
 
 // Sort sorts a collection by a certain order
-func (cq *CollectionQuery) Sort(sorters ...Sorter) *CollectionQuery {
+func (cq *CollectionQuery) Sort(sorters ...*Sorter) *CollectionQuery {
 	c := *cq
 
 	finalSorters := bson.M{}
