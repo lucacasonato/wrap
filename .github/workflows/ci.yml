@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongodb:
-        image: paulobarbeiro/mongodb-rs
+        image: docker.pkg.github.com/luca-rand/docker-run-rs/run
         ports:
           - 27017/tcp
           - 27018/tcp
