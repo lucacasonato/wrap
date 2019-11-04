@@ -1,0 +1,33 @@
+name: ci
+
+on: [push]
+
+jobs:
+  build:
+    name: ci
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: paulobarbeiro/mongodb-rs
+        ports:
+          - 27017/tcp
+          - 27018/tcp
+          - 27019/tcp
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+      - name: Get dependencies
+        run: |
+          go mod download
+      - name: Test
+        run: go test
+      - name: Build example
+        working-directory: ./example
+        run:
+          - go build -v .
+          - ./example
